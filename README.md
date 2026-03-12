@@ -765,13 +765,39 @@ chenpengwen@4CE405CFCK:~/rknn/rknn_model_zoo$ ./build-linux.sh -t rv1106 -a armh
 正常运行后，板端会输出检测结果（类别、置信度、坐标），并生成可视化图像，示例输出：
 
 ```
+[root@luckfox rknn_yolov8_demo]# ./rknn_yolov8_demo ../yolo26n_last.rknn model/b
+us.jpg
 load lable ./model/coco_80_labels_list.txt
-检测到目标数：5
-[1] 类别: person, 置信度: 0.90, 坐标: (120, 80, 180, 320)
-[2] 类别: person, 置信度: 0.90, 坐标: (200, 90, 260, 330)
-[3] 类别: bus, 置信度: 0.90, 坐标: (50, 60, 600, 400)
-[4] 类别: person, 置信度: 0.86, 坐标: (300, 100, 360, 340)
-[5] 类别: person, 置信度: 0.50, 坐标: (400, 110, 460, 350)
+model input num: 1, output num: 6
+input tensors:
+  index=0, name=data, n_dims=4, dims=[1, 640, 640, 3], n_elems=1228800, size=1228800, fmt=NHWC, type=INT8, qnt_type=AFFINE, zp=-128, scale=0.003922
+output tensors:
+  index=0, name=output1, n_dims=4, dims=[1, 80, 80, 4], n_elems=25600, size=25600, fmt=NHWC, type=INT8, qnt_type=AFFINE, zp=-110, scale=0.031129
+  index=1, name=output2, n_dims=4, dims=[1, 80, 80, 80], n_elems=512000, size=512000, fmt=NHWC, type=INT8, qnt_type=AFFINE, zp=127, scale=0.124336
+  index=2, name=output3, n_dims=4, dims=[1, 40, 40, 4], n_elems=6400, size=6400, fmt=NHWC, type=INT8, qnt_type=AFFINE, zp=-128, scale=0.043672
+  index=3, name=output4, n_dims=4, dims=[1, 40, 40, 80], n_elems=128000, size=128000, fmt=NHWC, type=INT8, qnt_type=AFFINE, zp=127, scale=0.282692
+  index=4, name=output5, n_dims=4, dims=[1, 20, 20, 4], n_elems=1600, size=1600, fmt=NHWC, type=INT8, qnt_type=AFFINE, zp=-127, scale=0.053002
+  index=5, name=output6, n_dims=4, dims=[1, 20, 20, 80], n_elems=32000, size=32000, fmt=NHWC, type=INT8, qnt_type=AFFINE, zp=120, scale=0.370148
+input_attrs[0].size_with_stride=1228800
+model is NHWC input fmt
+model input height=640, width=640, channel=3
+process image: model/bus.jpg -> ./bus_out.png
+origin size=640x640 crop size=640x640
+input image: 640 x 640, subsampling: 4:2:0, colorspace: YCbCr, orientation: 1
+scale=1.000000 dst_box=(0 0 639 639) allow_slight_change=1 _left_offset=0 _top_offset=0 padding_w=0 padding_h=0
+rknn_run
+post_process: n_output=6 output_per_branch=2 box_c=4 is_quant=1 => is_yolo26=1
+post_process: detected YOLO26 layout (RV1106), use YOLO26 postprocess.
+yolo26 head=0 reg_idx=0 cls_idx=1 grid=80x80 stride=8
+yolo26 head=1 reg_idx=2 cls_idx=3 grid=40x40 stride=16
+yolo26 head=2 reg_idx=4 cls_idx=5 grid=20x20 stride=32
+person @ (78 326 119 517) 0.508
+bus @ (81 136 558 452) 0.930
+person @ (212 240 285 512) 0.902
+person @ (108 237 223 533) 0.930
+person @ (477 233 560 520) 0.816
+write_image path: ./bus_out.png width=640 height=640 channel=3 data=0xa615a000
+
 ```
 
 ## 七、常见问题与排查
